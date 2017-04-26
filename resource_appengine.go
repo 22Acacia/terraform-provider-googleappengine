@@ -42,12 +42,11 @@ func resourceAppengine() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
-			
 			"threadsafe": &schema.Schema{
 				Type: 	  schema.TypeBool,
 				Optional: true,
 				ForceNew: true,
-				Default:  true,	
+				Default:  true,
 			},
 			
 			"runtime": &schema.Schema{
@@ -55,7 +54,6 @@ func resourceAppengine() *schema.Resource {
 				Required: true,
 				ForceNew: true,	
 			},
-			
 			"resource_version": &schema.Schema{
 				Type:     schema.TypeList,
 				ForceNew: true,
@@ -118,8 +116,6 @@ func resourceAppengine() *schema.Resource {
 				ForceNew: true,
 				Elem:     schema.TypeString,
 			},
-
-
 			"servingStatus": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
