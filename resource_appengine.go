@@ -8,7 +8,7 @@ import (
 	"strings"
 	"strconv"
 	"github.com/hashicorp/terraform/helper/schema"
-	"google.golang.org/api/appengine/v1beta4"
+	"google.golang.org/api/appengine/v1"
 	"google.golang.org/api/storage/v1"
 )
 
@@ -319,7 +319,7 @@ func resourceAppengineCreate(d *schema.ResourceData, meta interface{}) error {
 	}
 	
 	//  create the application
-	moduleVersionService := appengine.NewAppsModulesVersionsService(config.clientAppengine)
+	moduleVersionService := appengine.NewAppsServicesVersionsService(config.clientAppengine)
 	createCall := moduleVersionService.Create(config.Project, d.Get("moduleName").(string), version)
 	operation, err := createCall.Do()
 	if err != nil {
@@ -365,7 +365,7 @@ func operationWait(operation *appengine.Operation, config *Config) (error) {
 func resourceAppengineRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 
-	moduleVersionService := appengine.NewAppsModulesVersionsService(config.clientAppengine)
+	moduleVersionService := appengine.NewAppsServicesVersionsService(config.clientAppengine)
 	getCall := moduleVersionService.Get(config.Project, d.Get("moduleName").(string), d.Get("version").(string))
 	version, err := getCall.Do()
 	if err != nil {
@@ -380,12 +380,12 @@ func resourceAppengineRead(d *schema.ResourceData, meta interface{}) error {
 func resourceAppengineDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 
-	moduleVersionService := appengine.NewAppsModulesVersionsService(config.clientAppengine)
+	moduleVersionService := appengine.NewAppsServicesVersionsService(config.clientAppengine)
 	deleteCall := moduleVersionService.Delete(config.Project, d.Get("moduleName").(string), d.Get("version").(string))
 	operation, err := deleteCall.Do()
 	if err != nil {
 		if strings.Contains(err.Error(), "Cannot delete the final version of a service (module)") {
-			moduleService := appengine.NewAppsModulesService(config.clientAppengine)
+			moduleService := appengine.NewAppsServicesService(config.clientAppengine)
 			moduleDelete := moduleService.Delete(config.Project, d.Get("moduleName").(string))
 			operation, err = moduleDelete.Do()
 			if err != nil {
